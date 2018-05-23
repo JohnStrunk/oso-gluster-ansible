@@ -2,6 +2,23 @@
 
 This document outlines procedures for upgrading the packages on Gluster servers.
 
+## Automated upgrade
+
+The steps below have been automated via the `playbooks/upgrade.yml` Ansible
+playbook. This playbook will update all packages to their latest version (not
+just security updates), checking and waiting for the cluster to be healthy with
+each host upgraded.
+
+Usage:
+
+```shell
+$ ./ansible-ec2 -l g-us-east-2-c00,g-us-east-2-c01 playbooks/upgrade.yml
+
+# ... ansible output ...
+```
+
+The above playbook can also be used to upgrade the jump host.
+
 ## Type of upgrade
 
 Before upgrading, it is necessary to decide how extensively packages will be

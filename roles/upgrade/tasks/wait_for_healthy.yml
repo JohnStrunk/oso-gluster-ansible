@@ -1,0 +1,34 @@
+# vim: set ts=2 sw=2 et :
+---
+
+- run_once: true
+  delegate_to: "{{ cluster_master }}"
+  block:
+    # Gets list of volumes and also waits for local glusterd to be available
+    - name: Get list of volumes
+      command: "gluster vol list"
+      register: vols
+      changed_when: false
+      until: vols.rc == 0
+      retries: 120
+      delay: 30
+
+    # Make sure peers are online
+    - name: Get number of peers
+      shell: gluster pool list | tail -n +2 | wc -l
+      register: peers
+      changed_when: false
+
+    - name: Wait for all peers to be connected
+      shell: gluster pool list | grep 'Connected' | wc -l
+      register: connected
+      changed_when: false
+      until: connected.stdout == peers.stdout
+      retries: 120
+      delay: 30
+
+    # Health of the volumes
+    - include_tasks: wait_for_heals.yml
+      with_items: "{{ vols.stdout_lines }}"
+      loop_control:
+        loop_var: vol
