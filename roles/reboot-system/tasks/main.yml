@@ -1,6 +1,10 @@
 ---
 # vim: set ts=2 sw=2 et :
 
+- name: Sync file system
+  command: sync
+  changed_when: false
+
 - name: Reboot server
   shell: sleep 2 && systemctl reboot
   async: 1
