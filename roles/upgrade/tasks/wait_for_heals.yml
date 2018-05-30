@@ -1,0 +1,21 @@
+# vim: set ts=2 sw=2 et :
+---
+
+- name: Awaiting heals on volume
+  debug:
+    msg: "Volume: {{ vol }}"
+
+# Hardcodes number of bricks to 3. We could probably do better by parsing vol
+# info and looking at the "Number of Bricks" line.
+# When a brick is down, there will be a line:
+# Number of entries: -
+# instead of showing a number, so this serves as a check that bricks are up,
+# too.
+- name: Wait for heal count to be 0
+  shell: "gluster vol heal {{ vol }} statistics heal-count |
+          grep 'entries: 0' | wc -l"
+  changed_when: false
+  register: result
+  until: result.stdout == "3"
+  retries: 120
+  delay: 30

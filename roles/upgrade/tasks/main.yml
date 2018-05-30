@@ -1,0 +1,65 @@
+# vim: set ts=2 sw=2 et :
+---
+
+- debug:
+    msg: "Working on: {{ upgrading_host }}"
+
+# Determine if Gluster packages will be upgraded
+- name: Look for available updates
+  yum:
+    list: updates
+  register: result
+
+- set_fact:
+    gupdate: false
+    update_count: "{{ result.results|length }}"
+
+- name: Determine if Gluster packages will be updated
+  set_fact:
+    gupdate: true
+  when: "item.name is search('^gluster')"
+  with_items: "{{ result.results }}"
+
+- include_tasks: wait_for_healthy.yml
+  when: inventory_hostname in groups['gluster-servers']
+
+# If we're going to make changes, pause for user's ok
+- name: Pause before making changes
+  pause:
+    prompt: |-
+            Cluster is healthy.
+            Ready to upgrade {{ inventory_hostname }}.
+            Stopping/updating gluster: {{ gupdate }}
+            Packages to be upgraded: {{ update_count }}
+            Press <enter> to continue
+  when: gupdate or (update_count|int > 0)
+
+# If Gluster is being upgraded, we need to stop/kill all its processes
+- when: gupdate
+  block:
+    - name: Stop glusterd
+      systemd:
+        name: glusterd
+        state: stopped
+
+    - name: Stop glusterfs
+      command: "pkill glusterfs"
+
+    - name: Stop glusterfsd
+      command: "pkill glusterfsd"
+
+- when: gupdate or (update_count|int > 0)
+  block:
+    - name: Upgrade host packages to latest version
+      yum:
+        name: "*"
+        state: latest
+      register: system_updated
+
+    - name: Reboot after upgrade
+      include_role:
+        name: "reboot-system"
+      when: gupdate or system_updated.changed
+
+- include_tasks: wait_for_healthy.yml
+  when: inventory_hostname in groups['gluster-servers']

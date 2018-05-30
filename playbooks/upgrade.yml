@@ -1,0 +1,26 @@
+# vim: set ts=2 sw=2 et :
+---
+
+# This playbook will upgrade a set of hosts using `yum update`. It will update
+# all packages to their latest version. As a part of the upgrade, it will:
+# - Upgrades will be done 1 node at a time
+# - For Gluster servers, there are pre-flight and post-upgrade checks to wait
+#   for the cluster/volumes to heal
+# - If gluster packages are being updated, it will stop Gluster on the node
+# - If any packages are updated, the node will be rebooted
+#
+# Whole gluster clusters should be updated in a single run of the playbook to
+# ensure it can properly call out to the "cluster_master" for gluster
+# operations.
+
+- hosts: all
+  become: true
+  any_errors_fatal: true
+  tasks:
+    # Upgrade one host at a time
+    - include_role:
+        name: upgrade
+      with_items: "{{ play_hosts }}"
+      when: "hostvars[upgrading_host].inventory_hostname == inventory_hostname"
+      loop_control:
+        loop_var: upgrading_host

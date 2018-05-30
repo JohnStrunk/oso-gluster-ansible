@@ -30,8 +30,12 @@
     - rhel-7-server-extras-rpms
     - rh-gluster-3-for-rhel-7-server-rpms
 
-  - include_role:
-      name: update-system
+  - name: Upgrade host to latest version
+    package:
+      name: "*"
+      state: latest
+    register: system_updated
+
 
   - include_role:
       name: reboot-system
