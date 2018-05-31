@@ -31,9 +31,16 @@ playbook. This playbook will update all packages to their latest version (not
 just security updates), checking and waiting for the cluster to be healthy with
 each host upgraded.
 
+An optional playbook, `playbooks/download-upgrades.yml` is available to
+pre-download the available packages across all hosts to speed the upgrade
+process.
+
 Usage:
 
 ```shell
+$ ./ansible-ec2 playbooks/download-upgrades.yml
+# ... ansible output ...
+
 $ ./ansible-ec2 -l g-us-east-2-c00,g-us-east-2-c01 playbooks/upgrade.yml
 
 # ... ansible output ...
