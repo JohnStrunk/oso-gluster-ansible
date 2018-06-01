@@ -16,20 +16,47 @@ The `site.yml` playbook just includes lower-level playbooks from the
 various tasks in the cluster.
 
 Sub-playbooks:
-- `create-gluster-ca.yml` - Generates a Gluster CA key/cert. This is a one-time
-  operation, and is just here to document the process. The actual CA key
-  material for the production cluster is stored outside this repo.
-- `install-servers.yml` - This installs the Gluster server onto all inventory
-  hosts in the `gluster-servers` group. This should only need to be run when
-  new servers are added to the inventory.
-- `gluster-volume.yml` - This creates volumes (supervols) on the servers. The
-  configuration for the volumes can be found in `group_vars/gluster-servers`.
-  This playbook will not destroy an existing volume, but may modify it, so be
-  careful when editing the `gluster_volumes` dict.
+
+- `playbooks/ssh-keys.yml` - Installs/Removes ssh login keys for cluster admins
+- `playbooks/install-servers.yml` - This installs the Gluster server onto all
+  inventory hosts in the `gluster-servers` group. This should only need to be
+  run when new servers are added to the inventory.
+- `playbooks/gluster-volume.yml` - This creates volumes (supervols) on the
+  servers. The configuration for the volumes can be found in
+  `group_vars/gluster-servers`.  This playbook will not destroy an existing
+  volume, but may modify it, so be careful when editing the `gluster_volumes`
+  dict.
+- `playbooks/install-jumphost.yml` - Installs (mainly monitoring on) the jump
+  host used to access the environment.
+
+General playbooks (not a part of `site.yml`):
+
+- `playbooks/check-upgrade.yml` - Prints the number of packages w/ available
+  updates on each host. It also lists the count of updates that are security
+  related. (no cluster modifications)
+- `playbooks/create-gluster-ca.yml` - Generates a Gluster CA key/cert. This is
+  a one-time operation, and is just here to document the process. The actual CA
+  key material for the production cluster is stored outside this repo.
+- `playbooks/create-subvol.yml` - Creates the directories for gluster-subvol
+  once the supervols have been created. See: [Installing a new
+  cluster](docs/install-cluster.md)
+- `playbooks/download-upgrades.yml` - Downloads all available package updates
+  in parallel onto the hosts. This is just an optimization to speed upgrade.
+  (no cluster modifications)
+- `playbooks/health-check.yml` - Checks (waits for) outstanding heals across
+  the infrastructure. This is a good way to make a quick verification of
+  cluster/volume health. (no cluster modifications)
+- `playbooks/upgrade.yml` - Updates all packages on the servers via a rolling
+  update. It waits for the cluster to heal between each host. See: [Upgrading
+  Gluster servers](docs/server-upgrade.md)
+- `register-servers.yml` - Registers a newly provisioned server w/
+  subscription-manager so that packages can be installed. This is the first
+  thing to do when booting up new hardware.
 
 # Inventory structure
 
 The structure of the ansible groups is:
+
 - gluster-servers  // from `inventory_groups`
   - *server cluster*  // from `inventory_groups` (e.g., us-east-2-c00)
     - *server group*  // from ec2 tags (e.g., `gluster-group=us-east-2-c00-g00`)

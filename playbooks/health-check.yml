@@ -1,0 +1,17 @@
+# vim: set ts=2 sw=2 et :
+---
+
+# This playbook checks all volumes to make sure they are healthy. This playbook
+# does not make modifications to the cluster.
+
+- hosts: gluster-servers
+  become: true
+  tasks:
+    # Iterate through one master at a time
+    - include_role:
+        name: upgrade
+        tasks_from: wait_for_healthy.yml
+      with_items: "{{ play_hosts }}"
+      # item == inventory_hostname ensures we consider each host exactly once
+      # item == cluster_master filters down further to only the masters
+      when: "item == inventory_hostname and item == cluster_master"
