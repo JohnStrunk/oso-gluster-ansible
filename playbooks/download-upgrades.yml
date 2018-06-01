@@ -1,0 +1,15 @@
+# vim: set ts=2 sw=2 et :
+---
+
+# This playbook will pre-download all available package updates, but it will
+# not install or otherwise make changes to the hosts.
+
+- hosts: all
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Downloading available package updates
+      command: "yum update --downloadonly"
+      args:
+        warn: false
+      changed_when: false

@@ -2,6 +2,28 @@
 
 This document outlines procedures for upgrading the packages on Gluster servers.
 
+## Determining upgrade needs
+
+The playbook `playbooks/check-upgrade.yml` will count the total and
+security-specific package updates that are available. The playbook does not
+make any modifications to the hosts.
+
+Usage:
+
+```shell
+$ ./ansible-ec2 playbooks/check-upgrade.yml
+
+# ... ansible output ...
+CUSTOM STATS: ********************************************************
+        node3: { "security_updates": "0",  "total_updates": "11"}
+        jumper: { "security_updates": "0",  "total_updates": "2"}
+        node2: { "security_updates": "0",  "total_updates": "11"}
+        node1: { "security_updates": "0",  "total_updates": "11"}
+        node5: { "security_updates": "0",  "total_updates": "11"}
+        node0: { "security_updates": "0",  "total_updates": "11"}
+        node4: { "security_updates": "0",  "total_updates": "11"}
+```
+
 ## Automated upgrade
 
 The steps below have been automated via the `playbooks/upgrade.yml` Ansible
@@ -9,9 +31,16 @@ playbook. This playbook will update all packages to their latest version (not
 just security updates), checking and waiting for the cluster to be healthy with
 each host upgraded.
 
+An optional playbook, `playbooks/download-upgrades.yml` is available to
+pre-download the available packages across all hosts to speed the upgrade
+process.
+
 Usage:
 
 ```shell
+$ ./ansible-ec2 playbooks/download-upgrades.yml
+# ... ansible output ...
+
 $ ./ansible-ec2 -l g-us-east-2-c00,g-us-east-2-c01 playbooks/upgrade.yml
 
 # ... ansible output ...

@@ -1,0 +1,30 @@
+# vim: set ts=2 sw=2 et :
+---
+
+# This playbook will check the supplied hosts to see what upgrades are
+# available. It will not make any changes to the affected hosts.
+
+- hosts: all
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Looking for all available updates
+      command: "yum -q updateinfo list"
+      args:
+        warn: false
+      register: updates
+      changed_when: false
+
+    - name: Looking for security updates
+      command: "yum -q updateinfo list security"
+      args:
+        warn: false
+      register: security
+      changed_when: false
+
+    - name: Collecting results
+      set_stats:
+        per_host: true
+        data:
+          security_updates: "{{ security.stdout_lines|length }}"
+          total_updates: "{{ updates.stdout_lines|length }}"
