@@ -66,6 +66,8 @@ Vagrant.configure("2") do |config|
               "node5"
             ],
             # tags that need to exist for the config to parse correctly
+            "tag_gluster_master_free_stg_c00" => ["dummy"],
+            "tag_gluster_group_free_stg_c00_g00" => ["dummy"],
             "tag_gluster_master_us_east_1a_c00" => ["dummy"],
             "tag_gluster_group_us_east_1a_c00_g00" => ["dummy"],
             "tag_gluster_master_us_east_1a_c01" => ["dummy"],

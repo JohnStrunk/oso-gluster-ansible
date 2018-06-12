@@ -1,3 +1,11 @@
+#-- free-stg
+[g-free-stg-c00:vars]
+cluster_master="{{ groups['tag_gluster_master_free_stg_c00'][0] }}"
+cluster_member_group="g-free-stg-c00"
+
+[g-free-stg-c00:children]
+tag_gluster_group_free_stg_c00_g00
+
 #-- 1a cluster 00
 [g-us-east-1a-c00:vars]
 cluster_master="{{ groups['tag_gluster_master_us_east_1a_c00'][0] }}"
@@ -72,6 +80,7 @@ tag_gluster_group_us_east_2a_c01_g00
 
 [gluster-servers:children]
 # List all clusters as children of gluster-servers
+g-free-stg-c00
 g-us-east-1a-c00
 g-us-east-1a-c01
 g-us-east-1b-c00
