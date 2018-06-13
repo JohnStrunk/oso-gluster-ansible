@@ -1,5 +1,9 @@
 # Defines the volumes exported by gluster
 gluster_volumes:
+  supervolfs00:
+    size: 500G
+    device: /dev/xvdb
+    group: tag_gluster_group_free_stg_c00_g00
   supervole1a00:
     size: 500G
     device: /dev/xvdb
