@@ -1,0 +1,22 @@
+# vim: set ts=2 sw=2 et :
+---
+
+- name: Restart pcp daemons on Gluster servers
+  hosts: gluster-servers
+  become: true
+  tasks:
+    - name: Restart pmcd
+      systemd:
+        name: pmcd
+        enabled: true
+        state: restarted
+
+- name: Restart pcp daemons on Jump host
+  hosts: gluster_mgmt
+  become: true
+  tasks:
+    - name: Restart PCP manager
+      systemd:
+        name: pmmgr
+        enabled: true
+        state: restarted
