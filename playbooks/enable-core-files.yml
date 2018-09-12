@@ -1,0 +1,21 @@
+# vim: set ts=2 sw=2 et :
+---
+
+# This playbook will ensure core files are captured via abrtd & ccpp
+
+- hosts: all
+  become: true
+  tasks:
+    - name: Enable saving full cores via ccpp
+      lineinfile:
+        path: /etc/abrt/plugins/CCpp.conf
+        regexp: "^SaveFullCore"
+        line: "SaveFullCore=yes"
+        state: present
+      register: res
+
+    - name: Restart abrtd
+      systemd:
+        name: abrtd
+        state: restarted
+      when: res.changed
