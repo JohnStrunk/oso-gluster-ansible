@@ -21,3 +21,4 @@
     state: restarted
   with_items:
   - pmcd
+  - pmie
