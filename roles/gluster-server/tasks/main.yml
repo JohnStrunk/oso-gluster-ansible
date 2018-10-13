@@ -16,7 +16,7 @@
 
 - name: Start firewalld
   systemd:
-    daemon_reload: yes
+    daemon_reload: true
     name: firewalld
     enabled: true
     state: started
@@ -31,11 +31,35 @@
 - include_role:
     name: gluster-enable-tls
 
-- name: Enable & start Gluster
+- name: Enable Glusterd
   systemd:
-    daemon_reload: yes
+    daemon_reload: true
     name: glusterd
     enabled: true
+    state: stopped
+
+- name: Enable systemd to auto-restart glusterd
+  lineinfile:
+    state: present
+    insertafter: "^\\[Service\\]"
+    # Ensure only 1 key= instance exists, and only match left of equal
+    # so we can change the value, too
+    regexp: "{{ item | regex_search('^(.*=)') }}"
+    line: "{{ item }}"
+    path: /usr/lib/systemd/system/glusterd.service
+  with_items:
+    - "RestartSec=60"
+    - "Restart=on-abnormal"
+    # Old setting name for interval
+    - "StartLimitInterval=3600"
+    # New setting name for interval
+    - "StartLimitIntervalSec=3600"
+    - "StartLimitBurst=3"
+
+- name: start Glusterd
+  systemd:
+    daemon_reload: true
+    name: glusterd
     state: started
 
 - name: Install additional packages
@@ -43,5 +67,5 @@
     name: "{{ item }}"
     state: present
   with_items:
-  - git
-  - screen
+    - git
+    - screen
