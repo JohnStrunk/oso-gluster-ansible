@@ -11,6 +11,12 @@
         enabled: true
         state: restarted
 
+    - name: Restart pmie
+      systemd:
+        name: pmie
+        enabled: true
+        state: restarted
+
 - name: Restart pcp daemons on Jump host
   hosts: gluster_mgmt
   become: true
