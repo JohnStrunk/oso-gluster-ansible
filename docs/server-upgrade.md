@@ -146,7 +146,7 @@ fully upgrade the server (all packages).
 
     ```shell
     $ sudo gluster vol status
-    $ sudo gluster vol heal <volname> statistics heal-count
+    $ sudo gluster vol heal <volname> info summary
     # ... repeat above until the count is low ...
     $ sudo gluster vol heal <volname> info
     ```
