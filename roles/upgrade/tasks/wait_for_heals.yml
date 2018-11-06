@@ -12,8 +12,8 @@
 # instead of showing a number, so this serves as a check that bricks are up,
 # too.
 - name: Wait for heal count to be 0
-  shell: "gluster vol heal {{ vol }} statistics heal-count |
-          grep 'entries: 0' | wc -l"
+  shell: "gluster vol heal {{ vol }} info summary |
+          grep 'Total Number of entries: 0' | wc -l"
   changed_when: false
   register: result
   until: result.stdout == "3"

@@ -48,7 +48,7 @@ state > start`)
 - Make sure the bricks are up by checking `sudo gluster vol status <volname>`
   for each volume serverd by the affected node.
 - Monitor the healing of each volume via `sudo gluster vol heal <volname>
-  statistics heal-count`. The "number of entries" should steadily decrease to
+  info summary`. The "number of entries" should steadily decrease to
   zero.
 - Once the heal count has reached a minimum (or zero), `sudo gluster vol heal
   <volname> info` can be used to verify and/or get a list of the remaining
