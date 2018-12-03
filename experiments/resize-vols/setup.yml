@@ -1,0 +1,60 @@
+---
+- hosts: all
+  become: true
+  tasks:
+    - package:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - lvm2
+
+    - set_fact:
+        volume: myvol
+        device: /dev/xvdb
+        size: 50G
+
+    - name: Create volume group
+      lvg:
+        pvs: "{{ device }}"
+        vg: "{{ volume }}"
+
+    - name: Create thin pool
+      command: "lvcreate --thin {{ volume }}/pool
+                         -l 100%FREE
+                         --chunksize 256k
+                         --poolmetadatasize 16G
+                         --zero n"
+      args:
+        creates: "/dev/mapper/{{ volume }}-pool"
+
+    - name: Create brick LV
+      command: "lvcreate --thin
+                         --name {{ volume }}
+                         --virtualsize {{ size }}
+                         {{ volume }}/pool"
+      args:
+        creates: "/dev/mapper/{{ volume }}-{{ volume }}"
+
+    - name: Create brick file system
+      filesystem:
+        dev: "/dev/mapper/{{ volume }}-{{ volume }}"
+        fstype: xfs
+        opts: -i size=512
+
+    - name: Create brick mount directory
+      file:
+        path: "/bricks/{{ volume }}"
+        state: directory
+
+    - name: Mount brick
+      mount:
+        fstype: xfs
+        opts: inode64,discard,prjquota
+        path: /bricks/{{ volume }}
+        src: /dev/mapper/{{ volume }}-{{ volume }}
+        state: mounted
+
+    - name: Create brick root directory
+      file:
+        path: "/bricks/{{ volume }}/brick"
+        state: directory

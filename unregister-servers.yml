@@ -1,0 +1,10 @@
+# vim: set ts=2 sw=2 et :
+---
+
+- name: Unregister machine
+  hosts: all
+  become: true
+  tasks:
+  - name: Unregister w/ subscription-manager
+    redhat_subscription:
+      state: absent
