@@ -63,6 +63,30 @@
         state: latest
       register: system_updated
 
+    # When gluster gets upgraded, it removes our previous customization. This
+    # puts it back.
+    - name: Enable systemd to auto-restart glusterd
+      lineinfile:
+        state: present
+        insertafter: "^\\[Service\\]"
+        # Ensure only 1 key= instance exists, and only match left of equal
+        # so we can change the value, too
+        regexp: "{{ item | regex_search('^(.*=)') }}"
+        line: "{{ item }}"
+        path: /usr/lib/systemd/system/glusterd.service
+      with_items:
+        - "RestartSec=60"
+        - "Restart=on-abnormal"
+        # Old setting name for interval
+        - "StartLimitInterval=3600"
+        # New setting name for interval
+        - "StartLimitIntervalSec=3600"
+        - "StartLimitBurst=3"
+
+    - name: Reload systemd configuration
+      systemd:
+        daemon_reload: true
+
     - name: Reboot after upgrade
       include_role:
         name: "reboot-system"

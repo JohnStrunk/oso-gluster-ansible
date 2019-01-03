@@ -1,0 +1,27 @@
+---
+# vim: set ts=2 sw=2 et :
+
+- hosts: gluster-servers
+  become: true
+  tasks:
+    - name: Enable systemd to auto-restart glusterd
+      lineinfile:
+        state: present
+        insertafter: "^\\[Service\\]"
+        # Ensure only 1 key= instance exists, and only match left of equal
+        # so we can change the value, too
+        regexp: "{{ item | regex_search('^(.*=)') }}"
+        line: "{{ item }}"
+        path: /usr/lib/systemd/system/glusterd.service
+      with_items:
+        - "RestartSec=60"
+        - "Restart=on-abnormal"
+        # Old setting name for interval
+        - "StartLimitInterval=3600"
+        # New setting name for interval
+        - "StartLimitIntervalSec=3600"
+        - "StartLimitBurst=3"
+
+    - name: Reload systemd configuration
+      systemd:
+        daemon_reload: true
