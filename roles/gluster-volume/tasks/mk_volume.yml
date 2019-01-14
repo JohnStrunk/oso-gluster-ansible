@@ -55,7 +55,7 @@
 - name: Mount brick
   mount:
     fstype: xfs
-    opts: inode64,discard,prjquota
+    opts: inode64,discard,prjquota,x-systemd.device-timeout=10min
     path: /bricks/{{ volume }}
     src: /dev/mapper/{{ volume }}-{{ volume }}
     state: mounted
