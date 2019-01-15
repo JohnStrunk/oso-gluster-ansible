@@ -82,6 +82,7 @@
         # New setting name for interval
         - "StartLimitIntervalSec=3600"
         - "StartLimitBurst=3"
+      when: inventory_hostname in groups['gluster-servers']
 
     - name: Reload systemd configuration
       systemd:
