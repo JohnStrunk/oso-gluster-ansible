@@ -11,4 +11,4 @@ GLUSTER_NODE_KEY_SIZE: 4096
 # Number of days CA and host keys should be valid
 GLUSTER_KEY_VALID_DAYS: "3650"
 
-ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+#ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
