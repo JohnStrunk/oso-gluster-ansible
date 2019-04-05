@@ -1,47 +1,3 @@
-#-- free-stg
-[g-free-stg-c00:vars]
-cluster_master="{{ groups['tag_gluster_master_free_stg_c00'][0] }}"
-cluster_member_group="g-free-stg-c00"
-
-[g-free-stg-c00:children]
-tag_gluster_group_free_stg_c00_g00
-
-#-- 1a cluster 00
-[g-us-east-1a-c00:vars]
-cluster_master="{{ groups['tag_gluster_master_us_east_1a_c00'][0] }}"
-cluster_member_group="g-us-east-1a-c00"
-
-[g-us-east-1a-c00:children]
-tag_gluster_group_us_east_1a_c00_g00
-
-#-- 1a cluster 01
-[g-us-east-1a-c01:vars]
-cluster_master="{{ groups['tag_gluster_master_us_east_1a_c01'][0] }}"
-cluster_member_group="g-us-east-1a-c01"
-
-[g-us-east-1a-c01:children]
-tag_gluster_group_us_east_1a_c01_g00
-
-
-
-#-- 1b cluster 00
-[g-us-east-1b-c00:vars]
-cluster_master="{{ groups['tag_gluster_master_us_east_1b_c00'][0] }}"
-cluster_member_group="g-us-east-1b-c00"
-
-[g-us-east-1b-c00:children]
-tag_gluster_group_us_east_1b_c00_g00
-
-#-- 1b cluster 01
-[g-us-east-1b-c01:vars]
-cluster_master="{{ groups['tag_gluster_master_us_east_1b_c01'][0] }}"
-cluster_member_group="g-us-east-1b-c01"
-
-[g-us-east-1b-c01:children]
-tag_gluster_group_us_east_1b_c01_g00
-
-
-
 #-- 2 cluster 00
 [g-us-east-2-c00:vars]
 cluster_master="{{ groups['tag_gluster_master_us_east_2_c00'][0] }}"
@@ -50,45 +6,11 @@ cluster_member_group="g-us-east-2-c00"
 [g-us-east-2-c00:children]
 tag_gluster_group_us_east_2_c00_g00
 
-#-- 2 cluster 01
-[g-us-east-2-c01:vars]
-cluster_master="{{ groups['tag_gluster_master_us_east_2_c01'][0] }}"
-cluster_member_group="g-us-east-2-c01"
-
-[g-us-east-2-c01:children]
-tag_gluster_group_us_east_2_c01_g00
-
-
-
-#-- 2a cluster 00
-[g-us-east-2a-c00:vars]
-cluster_master="{{ groups['tag_gluster_master_us_east_2a_c00'][0] }}"
-cluster_member_group="g-us-east-2a-c00"
-
-[g-us-east-2a-c00:children]
-tag_gluster_group_us_east_2a_c00_g00
-
-#-- 2a cluster 01
-[g-us-east-2a-c01:vars]
-cluster_master="{{ groups['tag_gluster_master_us_east_2a_c01'][0] }}"
-cluster_member_group="g-us-east-2a-c01"
-
-[g-us-east-2a-c01:children]
-tag_gluster_group_us_east_2a_c01_g00
-
 
 
 [gluster-servers:children]
 # List all clusters as children of gluster-servers
-g-free-stg-c00
-g-us-east-1a-c00
-g-us-east-1a-c01
-g-us-east-1b-c00
-g-us-east-1b-c01
 g-us-east-2-c00
-g-us-east-2-c01
-g-us-east-2a-c00
-g-us-east-2a-c01
 
 # The machine that will aggregate the pcp data from the gluster servers
 [pcp-aggregators:children]

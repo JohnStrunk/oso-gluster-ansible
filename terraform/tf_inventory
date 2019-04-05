@@ -1,9 +1,9 @@
 # Example terraform ansible configuration
 
 # Must manually update these IPs to match AWS
-gluster-0 ansible_host=34.204.197.44
-gluster-1 ansible_host=3.209.10.69
-gluster-2 ansible_host=3.83.187.32
+gluster-0 ansible_host=34.201.28.246
+gluster-1 ansible_host=54.236.61.59
+gluster-2 ansible_host=34.201.30.66
 
 [all:vars]
 ansible_user='ec2-user'

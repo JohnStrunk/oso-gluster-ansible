@@ -1,73 +1,13 @@
 # Defines the volumes exported by gluster
 gluster_volumes:
-  supervolfs00:
-    size: 500G
-    device: /dev/xvdb
-    group: tag_gluster_group_free_stg_c00_g00
-  supervole1a00:
-    size: 500G
-    device: /dev/xvdb
-    group: tag_gluster_group_us_east_1a_c00_g00
-  supervole1a01:
-    size: 500G
-    device: /dev/xvdb
-    group: tag_gluster_group_us_east_1a_c01_g00
-  supervole1a02:
-    size: 500G
-    device: /dev/xvdc
-    group: tag_gluster_group_us_east_1a_c00_g00
-  supervole1a03:
-    size: 500G
-    device: /dev/xvdc
-    group: tag_gluster_group_us_east_1a_c01_g00
-  supervole1b00:
-    size: 500G
-    device: /dev/xvdb
-    group: tag_gluster_group_us_east_1b_c00_g00
-  supervole1b01:
-    size: 500G
-    device: /dev/xvdb
-    group: tag_gluster_group_us_east_1b_c01_g00
-  supervole1b02:
-    size: 500G
-    device: /dev/xvdc
-    group: tag_gluster_group_us_east_1b_c00_g00
-  supervole1b03:
-    size: 500G
-    device: /dev/xvdc
-    group: tag_gluster_group_us_east_1b_c01_g00
   supervole200:
     size: 500G
-    device: /dev/xvdb
+    device: /dev/nvme1n1
     group: tag_gluster_group_us_east_2_c00_g00
-  supervole201:
-    size: 500G
-    device: /dev/xvdb
-    group: tag_gluster_group_us_east_2_c01_g00
   supervole202:
     size: 500G
-    device: /dev/xvdc
+    device: /dev/nvme2n1
     group: tag_gluster_group_us_east_2_c00_g00
-  supervole203:
-    size: 500G
-    device: /dev/xvdc
-    group: tag_gluster_group_us_east_2_c01_g00
-  supervol00:
-    size: 500G
-    device: /dev/xvdb
-    group: tag_gluster_group_us_east_2a_c00_g00
-  supervol01:
-    size: 500G
-    device: /dev/xvdb
-    group: tag_gluster_group_us_east_2a_c01_g00
-  supervole2a02:
-    size: 500G
-    device: /dev/xvdc
-    group: tag_gluster_group_us_east_2a_c00_g00
-  supervole2a03:
-    size: 500G
-    device: /dev/xvdc
-    group: tag_gluster_group_us_east_2a_c01_g00
 
 # Number of snapshots to retain per supervol
 max_gluster_snaphots: 7
