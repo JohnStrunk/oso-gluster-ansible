@@ -1,3 +1,6 @@
 *.retry
 gluster_ca.*
 .vagrant
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup

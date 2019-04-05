@@ -1,0 +1,8 @@
+#! /bin/bash
+
+export ANSIBLE_SHOW_CUSTOM_STATS=true
+
+ansible-playbook \
+  -i terraform/tf_inventory \
+  -i inventory_groups \
+  "$@"
