@@ -31,7 +31,7 @@
             Ready to upgrade {{ inventory_hostname }}.
             Stopping/updating gluster: {{ gupdate }}
             Packages to be upgraded: {{ update_count }}
-            Press <enter> to continue
+    seconds: 30
   when: gupdate or (update_count|int > 0)
 
 # If Gluster is being upgraded, we need to stop/kill all its processes
