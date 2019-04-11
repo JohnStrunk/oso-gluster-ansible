@@ -1,3 +1,4 @@
 #ansible_ssh_private_key_file: '/home/jstrunk/.ssh/ec2-jstrunk.pem'
-ansible_ssh_common_args: "-o StrictHostKeyChecking=no
-  -o ProxyCommand='ssh -W %h:%p -q ec2-user@{{ hostvars.gluster_mgmt.ec2_dns_name }}'"
+ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
+#ansible_ssh_common_args: "-o StrictHostKeyChecking=no
+#  -o ProxyCommand='ssh -W %h:%p -q ec2-user@{{ hostvars.gluster_mgmt.ec2_dns_name }}'"

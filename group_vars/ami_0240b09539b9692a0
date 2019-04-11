@@ -1,0 +1,2 @@
+# RHEL-7.6_HVM_GA-20190128-x86_64-0-Access2-GP2 (east-1)
+ansible_user: 'ec2-user'
