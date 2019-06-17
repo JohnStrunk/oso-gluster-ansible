@@ -3,6 +3,7 @@
 
 - name: Install Gluster on servers
   hosts: gluster-servers
+  any_errors_fatal: true
   become: true
   roles:
   - gluster-server
@@ -11,6 +12,7 @@
 
 - name: Install Gluster client everywhere
   hosts: all
+  any_errors_fatal: true
   become: true
   roles:
   - gluster-client

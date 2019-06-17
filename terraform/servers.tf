@@ -13,7 +13,6 @@ resource "aws_instance" "gluster-servers" {
   count = 3
   # ami = "ami-9887c6e7" # CentOS 7 1805_01
   ami = "ami-0240b09539b9692a0" # RHEL-7.6_HVM_GA-20190128-x86_64-0-Access2-GP2 (east-1)
-  associate_public_ip_address = "true"
   ebs_optimized = "true"
   instance_type = "m5.xlarge"
   key_name = "yubikey"
@@ -24,6 +23,9 @@ resource "aws_instance" "gluster-servers" {
   security_groups = ["gluster-servers"]
   tags = {
     Name = "gluster-${count.index}"
+    gluster-group = "us-east-2-c00-g00"
+    # gluster-master is the first one
+    gluster-master = "${count.index == 0 ? "us-east-2-c00" : "none"}"
   }
   ebs_block_device {
     delete_on_termination = "true"
@@ -41,6 +43,15 @@ resource "aws_instance" "gluster-servers" {
     volume_size = 100
     volume_type = "gp2"
   }
+}
+
+# Allocate an elastic ip for each gluster server
+# This ensures a stable external IP across shutdowns, but incurrs $0.005 per
+# hour that the machines are turned off.
+resource "aws_eip" "gluster-server-addresses" {
+  count = 3
+  instance = "${element(aws_instance.gluster-servers.*.id, count.index)}"
+  vpc = "true"
 }
 
 resource "aws_security_group" "gluster-servers" {
