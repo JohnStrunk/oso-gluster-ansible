@@ -1,0 +1,15 @@
+# vim: set ts=2 sw=2 et :
+---
+
+- hosts: all
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Get list of brick directories with quota
+      shell: "xfs_quota -x -c 'state -p' | sed -nE 's|.*(/bricks/\\S+).*|\\1|p'"
+      register: dir_list
+      changed_when: false
+
+    - name: Enable project quota enforcement
+      shell: "xfs_quota -x -c 'enable -pv' {{ item }}"
+      with_items: "{{ dir_list.stdout_lines }}"
