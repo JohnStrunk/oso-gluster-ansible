@@ -35,7 +35,7 @@
   when: gupdate or (update_count|int > 0)
 
 # If Gluster is being upgraded, we need to stop/kill all its processes
-- when: gupdate
+- when: gupdate|bool
   block:
     - name: Stop glusterd
       systemd:
@@ -55,7 +55,7 @@
       register: result
       failed_when: result.rc != 0 and result.rc != 1
 
-- when: gupdate or (update_count|int > 0)
+- when: gupdate|bool or (update_count|int > 0)
   block:
     - name: Upgrade host packages to latest version
       yum:
@@ -92,6 +92,17 @@
       include_role:
         name: "reboot-system"
       when: gupdate or system_updated.changed
+
+    # Seems like reboot may re-enable xfs quotas... disable them again
+    - name: Get list of brick directories with quota
+      shell: "xfs_quota -x -c 'state -p' | sed -nE 's|.*(/bricks/\\S+).*|\\1|p'"
+      register: brick_list
+      changed_when: false
+
+    - name: Disable project quota enforcement
+      shell: "xfs_quota -x -c 'disable -pv' {{ item }}"
+      with_items: "{{ brick_list.stdout_lines }}"
+
 
 - include_tasks: wait_for_healthy.yml
   when: inventory_hostname in groups['gluster-servers']
