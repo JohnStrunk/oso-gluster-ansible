@@ -59,11 +59,10 @@
     mode: 0755
 
 - name: Relay metrics to Zabbix
-  blockinfile:
+  lineinfile:
     create: yes
-    block: |
-      pcp2zabbix_with_gluster.sh --zabbix-lld -g {{ zabbix_server }} -E 60 -t 60 {{ pcp_metrics | join(' ') }}
-      pcp2zabbix_with_gluster.sh --zabbix-lld -g {{ zabbix_impersonator_server }} -E 60 -t 60 {{ pcp_metrics | join(' ') }}
+    regexp: '^pcp2zabbix'
+    line: "pcp2zabbix_with_gluster.sh --zabbix-lld -g {{ zabbix_server }} -E 60 -t 60 {{ pcp_metrics | join(' ') }}"
     path: /etc/pcp/pmmgr/monitor
     state: present
 

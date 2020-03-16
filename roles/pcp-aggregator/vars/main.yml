@@ -1,5 +1,4 @@
-zabbix_server: zabbix.devshift.net
-zabbix_impersonator_server: zabbix-impersonator-trapper.devshift.net
+zabbix_server: zabbix-impersonator-trapper.devshift.net
 
 pcp_metrics:
 - disk.dev.read
