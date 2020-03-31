@@ -62,6 +62,14 @@
     name: glusterd
     state: started
 
+- name: Add daily fstrim of filesystems
+  lineinfile:
+    create: yes
+    regexp: 'fstrim'
+    line: "55 23 * * * root /usr/sbin/fstrim -a"
+    path: /etc/cron.d/fstrim-devices
+    state: present
+
 - name: Install additional packages
   package:
     name: "{{ item }}"

@@ -15,8 +15,8 @@ Vagrant.configure("2") do |config|
   end
 
   # Can't write to /vagrant on atomic-host, so disable default sync dir
-  #config.vm.synced_folder ".", "/vagrant", disabled: true
-  config.vm.synced_folder ".", "/vagrant", type: "sshfs"
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+  #config.vm.synced_folder ".", "/vagrant", type: "sshfs"
 
 
   config.vm.define "jumper" do |node|
